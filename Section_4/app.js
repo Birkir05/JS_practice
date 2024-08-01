@@ -304,16 +304,246 @@
 // ______________________________________
 // IIFE and safe code
 
-var greeting = 'Hola'; // in Global Execution context
+// var greeting = 'Hola'; // in Global Execution context
 
-(function(global, name) {
-    var greeting = "Hello"; // inside the Execution context
-                                       // of the anonymous function
+// (function(global, name) {
+//     var greeting = "Hello"; // inside the Execution context
+//                                        // of the anonymous function
         
-    global.greeting = 'Hello';
+//     global.greeting = 'Hello';
 
-    console.log(greeting + ' ' + name);
-}(window, 'Birkir')); // IIFE
+//     console.log(greeting + ' ' + name);
+// }(window, 'Birkir')); // IIFE
 
 
-console.log(greeting)
+// console.log(greeting)
+
+// _________________________
+// Understanding Closures
+
+
+
+// function greet(whattosay) {
+
+//     return function(name) {
+//         console.log(whattosay + ' ' + name);
+//     }
+
+// }
+
+// var fucked = greet('fuck');
+
+// fucked('birkir')
+
+
+
+// // Closure example 
+
+// function buildFunctions() {
+    
+//     var arr =[];
+
+//     for (var i =0; i <3; i++) {
+
+//         arr.push(
+//             function() {
+//                 console.log(i);
+//             }
+//         )
+
+//     }
+
+//     return arr;
+// }
+
+// var fs = buildFunctions();
+
+
+// fs[0]();
+// fs[1]();
+// fs[2]();
+
+// // Closure example - better
+
+// function buildFunctions2() {
+    
+//     var arr =[];
+
+//     for (var i =0; i <3; i++) {
+
+//         arr.push(
+//             (function(j) {
+//                 return function() {
+//                     console.log(j);
+//                 }
+//             }(i))
+//         )
+//     }
+
+//     return arr;
+// }
+
+// var fs2 = buildFunctions2();
+
+
+// fs2[0]();
+// fs2[1]();
+// fs2[2]();
+
+// ________________________________________________
+// real world example of closures
+
+// function makeGreeting(language) {
+//     return function(firstname, lastname) {
+
+//         if (language === 'en') {
+//             console.log('hello', firstname +' '+lastname); 
+//         }
+//         else if (language === 'isl') {
+//             console.log('Hæ', firstname +' '+lastname); 
+//         }
+
+//     }
+// }
+
+// var greetEnglish = makeGreeting('en');
+// var greetIcelandic = makeGreeting('isl');
+
+
+// greetEnglish("Birkir", "Axelsson");
+
+// __________________________
+// closures and callback functions
+
+// function sayHiLater() {
+//     var greeting = 'Hi!';
+
+//     setTimeout(function() {
+//         console.log(greeting);
+
+//     }, 3000);
+// }
+
+// sayHiLater();
+
+// function tellMeWhenDone(callback) {
+
+//     var a = 1000;
+//     var b = 2550;
+
+//     callback();
+// }
+
+// tellMeWhenDone(function() {
+//     console.log('eg er buinn');
+// });
+
+// tellMeWhenDone(function() {
+//     alert('aallter buid');
+// });
+
+//_____________________________________________
+// call(), apply() and bind()
+
+// var person = {
+//     firstname: 'John',
+//     lastname: 'Doe',
+//     getFullName: function() {
+
+//         var fullname = this.firstname + ' ' + this.lastname;
+//         return fullname;
+//     }
+// }
+
+// var logName = function(lang1, lang2) {
+
+//     console.log('Logged: ' + this.getFullName());
+//     console.log('Arguments: ' + lang1 + ' ' + lang2);
+//     console.log('------------------')
+// }
+
+// var logPersonName = logName.bind(person);
+
+// logPersonName();
+
+// logPersonName('en', 'isl')
+
+// logName.call(person, 'en', 'isl');
+// logName.apply(person, ['en', 'isl']);
+
+
+
+// (function(lang1, lang2) {
+
+//     console.log('Logged: ' + this.getFullName());
+//     console.log('Arguments: ' + lang1 + ' ' + lang2);
+//     console.log('------------------')
+
+// }.apply(person, ['en', 'isl']));
+
+
+// // real life scenario - function borrowing 
+
+// var person2 = {
+//     firstname: 'Sveinn',
+//     lastname: 'Thorbjorn'
+// }
+
+// console.log(person.getFullName.apply(person2));
+
+// // function currying
+
+// function multiply(a,b) {
+//     return a*b;
+// }
+
+// var multipleByTwo = multiply.bind(this, 2);
+
+// console.log(multipleByTwo(8));
+
+
+//_________________________________________
+// Functional programming 
+
+function mapForEach(arr, fn) {
+
+    var newArr = [];
+    for (var i=0; i < arr1.length; i++) {
+        newArr.push(
+            fn(arr[i])
+        )
+    };
+
+    return newArr;
+
+}
+
+var arr1 = [2, 4, 1];
+console.log(arr1);
+
+var arr2 = mapForEach(arr1, function(item) {
+    return item*2;
+});
+
+var arr3 = mapForEach(arr1, function(item) {
+    return item > 2;
+});
+console.log(arr3);
+
+
+var checkPastLimit = function(limiter, item) {  
+    return item > limiter;
+}
+
+var arr4 = mapForEach(arr1, checkPastLimit.bind(this, 1));
+console.log(arr4);
+
+var checkPastLimitSimplified = function(limiter) {
+    return function(limiter, item) {
+        return item > limiter;
+    }.bind(this, limiter);
+};
+
+var arr5 = mapForEach(arr1, checkPastLimitSimplified(1));
+console.log(arr5);
+
