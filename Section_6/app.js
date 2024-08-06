@@ -1,6 +1,6 @@
 // Function constructors - only usable if the function doesnt return anything,
 //                         since the 'new' operater is returning an object which the function is constructing.
-//                         the 'new' operater sets the 'this' keyword to the object witch it created
+//                         the 'new' operater sets the 'this' keyword to the object which it created
 
 function Person(firstname, lastname) {
 
@@ -29,3 +29,30 @@ Person.prototype.getFormalFullName = function() {
 }
 
 console.log(sonur.getFormalFullName());
+
+
+// Creating a new method on the prototype property of the String function constructor. 
+// all strings have access to this new method
+
+String.prototype.isLengthGreaterThan = function(limit) {
+    return this.length > limit;
+}
+
+console.log('Birkir'.isLengthGreaterThan(3));
+
+Number.prototype.isPositive = function() {
+    return this > 0; // only works if you create a number that is an object
+}
+
+
+Array.prototype.myCustomFeature = 'cool!';
+
+var arr = ['La', 'sva', 'go'];
+
+for (prop in arr) {
+    console.log(prop+': '+arr[prop]);
+}
+console.log('------------------------')
+for (var i=0; arr.length > i; i++) {
+    console.log(i+': '+arr[i]);
+}
